@@ -12,27 +12,16 @@ def initial_player_pos(level):
                 if cell == "L":
                     return (r, c)
     # finds the initial position of the player
-def beautify(level):
-    emojis = {
-        "T": "🌲",
-        "L": "👨",
-        "+": "🍄",
-        "R": "🪨 ",
-        "~": "🟦",
-        "-": "⬜",
-        "D": "🏊",
-        ".": "  ",
-        "x": "🪓"
-    }
+def beautify(level, emojis):
     return [[emojis.get(cell, cell) for cell in row] for row in level]
 
-def display_map(map_level, points, under_l):
+def display_map(map_level, points, under_l, emojis):
     os.system('cls')
-    visual_level = beautify(map_level)
+    visual_level = beautify(map_level, emojis)
     for row in visual_level:
         print(*row, sep="")
     print(f"\nYou Collected: {points}🍄")
-    print(f"You are under: {under_l}")
+    print(f"You are under: {emojis[under_l]}")
 
 
 def user_inputs(moves):
@@ -106,7 +95,7 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
 
     return cur_r, cur_c, under_l, points, True
     # TANGINA NAG IISANG RETURN NA NAKALIMUTAN KO KAYA NAGCACRASH
-    
+
 def reset_game():
         print("\nResetting game...")
         time.sleep(1)
@@ -128,15 +117,28 @@ def main():
         }
     row_len = len(map_level)
     col_len = len(map_level[0])
+    
+    
+    emojis = {
+        "T": "🌲",
+        "L": "👨",
+        "+": "🍄",
+        "R": "🪨 ",
+        "~": "🟦",
+        "-": "⬜",
+        "D": "🏊",
+        ".": "  ",
+        "x": "🪓"
+    }
     points = 0
     status = True
     under_l = "."
 
     while status == True:
-        display_map(map_level, points, under_l)
+        display_map(map_level, points, under_l, emojis)
         
         if not any("+" in row for row in map_level):
-            display_map(map_level, points, under_l)
+            display_map(map_level, points, under_l, emojis)
             print("\n\nYou Won!")
             return
         # checks if mushroom still exists
@@ -151,10 +153,10 @@ def main():
             cur_r, cur_c, under_l, points, status = player_movement(
                 map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points
             )
-            display_map(map_level, points, under_l)
+            display_map(map_level, points, under_l, emojis)
             time.sleep(0.15)
             if status == False:
-                display_map(map_level, points, under_l)
+                display_map(map_level, points, under_l, emojis)
                 print("\n\nGame Over!")
                 return
 
