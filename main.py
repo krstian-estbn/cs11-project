@@ -36,13 +36,10 @@ def display_map(map_level, points, under_l):
 
 
 def user_inputs(moves):
-    while True:
-        move_input = input("Enter move: ").upper()
-        if move_input and all(ch in moves for ch in move_input):
-            return move_input
-        print("\n\nInvalid moves. Try again.")
-        time.sleep(0.8)
-        continue
+    move_input = input("Enter move: ").upper()
+    if move_input and all(ch in moves for ch in move_input):
+        return move_input
+    return None
 
 def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
     action = moves[move]
@@ -107,6 +104,9 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
         cur_r, cur_c = new_r, new_c
         return cur_r, cur_c, under_l, points, True
 
+    return cur_r, cur_c, under_l, points, True
+    # TANGINA NAG IISANG RETURN NA NAKALIMUTAN KO KAYA NAGCACRASH
+    
 def reset_game():
         print("\nResetting game...")
         time.sleep(1)
@@ -142,6 +142,11 @@ def main():
         # checks if mushroom still exists
 
         move_input = user_inputs(moves)
+        if move_input is None:
+            print("Invalid moves. Try again.")
+            time.sleep(0.8)
+            continue
+        
         for move in move_input:            
             cur_r, cur_c, under_l, points, status = player_movement(
                 map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points
