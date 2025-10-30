@@ -1,6 +1,6 @@
 TTTTTTTTTTTTTTTTT
-T   MR          T
-T      RPRW     T
-T           M   T
-T    M          T
+T...+R..........T
+T....RLR.~......T
+T...........~...T
+T...+R......+...T
 TTTTTTTTTTTTTTTTT
