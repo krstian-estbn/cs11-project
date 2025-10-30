@@ -21,16 +21,18 @@ def beautify(level):
         "~": "🟦",
         "-": "⬜",
         "D": "🏊",
-        ".": "  "
+        ".": "  ",
+        "x": "🪓"
     }
     return [[emojis.get(cell, cell) for cell in row] for row in level]
 
-def display_map(map_level, points):
+def display_map(map_level, points, under_l):
     os.system('cls')
     visual_level = beautify(map_level)
     for row in visual_level:
         print(*row, sep="")
     print(f"\nYou Collected: {points}🍄")
+    print(f"You are under: {under_l}")
 
 
 def user_inputs(moves):
@@ -43,7 +45,12 @@ def user_inputs(moves):
         continue
 
 def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
-    dr, dc = moves[move]
+    action = moves[move]
+    if callable(action):
+        action()
+        return cur_r, cur_c, under_l, points, True
+
+    dr, dc = action
     new_r, new_c = cur_r + dr, cur_c + dc
 
 
@@ -79,10 +86,13 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
     if target_pos == "~":
         map_level[cur_r][cur_c] = under_l
         map_level[new_r][new_c] = "D"
-        return new_r, new_c, under_l, points, False
+        under_l = "~"
+        cur_r, cur_c = new_r, new_c
+        
+        return cur_r, cur_c, under_l, points, False
     # water function
 
-    if target_pos in ("+", ".", "-"):
+    if target_pos in ("+", ".", "-", "x"):
         map_level[cur_r][cur_c] = under_l
         if target_pos == "+":
             points += 1
@@ -97,15 +107,16 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
         cur_r, cur_c = new_r, new_c
         return cur_r, cur_c, under_l, points, True
 
-def main():
-    map_level = map_generator("test.txt")
-    r, c = initial_player_pos(map_level)
-    
-    def reset_game():
+def reset_game():
         print("\nResetting game...")
         time.sleep(1)
         main()
         return
+
+def main():
+    map_level = map_generator("test.txt")
+    r, c = initial_player_pos(map_level)
+    
 
     cur_r, cur_c = r, c
     moves = {
@@ -122,27 +133,23 @@ def main():
     under_l = "."
 
     while status == True:
-        display_map(map_level, points)
+        display_map(map_level, points, under_l)
         
         if not any("+" in row for row in map_level):
-            display_map(map_level, points)
+            display_map(map_level, points, under_l)
             print("\n\nYou Won!")
             return
         # checks if mushroom still exists
 
         move_input = user_inputs(moves)
-        for move in move_input:
-            if move == "!":
-                reset_game()
-                return
-            
+        for move in move_input:            
             cur_r, cur_c, under_l, points, status = player_movement(
                 map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points
             )
-            display_map(map_level, points)
+            display_map(map_level, points, under_l)
             time.sleep(0.15)
             if status == False:
-                display_map(map_level, points)
+                display_map(map_level, points, under_l)
                 print("\n\nGame Over!")
                 return
 
