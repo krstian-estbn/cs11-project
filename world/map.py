@@ -11,3 +11,4 @@ class Map:
             for c, cell in enumerate(row):
                     if cell == "L":
                         return (r, c)
+        return (-1 , -1)

@@ -71,11 +71,6 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
     return cur_r, cur_c, under_l, points, True
     # TANGINA NAG IISANG RETURN NA NAKALIMUTAN KO KAYA NAGCACRASH
 
-def reset_game():
-        print("\nResetting game...")
-        time.sleep(1)
-        return True
-
 def game_loop():
     input_handler = InputHandler()
     renderer = Renderer()
@@ -83,6 +78,9 @@ def game_loop():
 
     map_level = maps.map_generator("test.txt")
     r, c = maps.initial_player_pos(map_level)
+    if (r, c) == (-1, -1):
+        print("Invalid Map!")
+        return
 
     cur_r, cur_c = r, c
 
