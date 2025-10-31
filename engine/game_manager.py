@@ -12,11 +12,15 @@ maps = Map()
 
 class GameManager:
     def __init__(self):
-        self.map_level = maps.map_generator("test.txt")
-        (self.r, self.c), self.mushroom_count = maps.initial_player_pos(self.map_level)
-        self.player = Player(self.r, self.c)
-        self.row_len = len(self.map_level)
-        self.col_len = len(self.map_level[0])
+        self.input_handler = InputHandler()
+        self.renderer = Renderer()
+        self.maps = Map()
+        self.player = None
+        self.map_level = None
+        self.mushrooms = 0
+        self.row_len = 0
+        self.col_len = 0
+
 
     def reset_game(self):
         print("\nResetting game...")
