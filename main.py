@@ -33,7 +33,9 @@ def game_loop():
 
         move_input = input_handler.get_input()
         
-        for move in move_input:            
+        for move in move_input:
+            if move == 'P':
+                player.pickup_item()
             player.movement(map_level, move, input_handler.moves, row_len, col_len)
 
             if not player.status:
