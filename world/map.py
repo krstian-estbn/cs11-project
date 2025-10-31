@@ -7,8 +7,13 @@ class Map:
             return [list(line.strip()) for line in level_loader]
 
     def initial_player_pos(self, level):
+        s = (-1, -1)
+        m = 0
         for r, row in enumerate(level):
             for c, cell in enumerate(row):
+                    if cell == '+':
+                        m += 1 
+                        continue
                     if cell == "L":
-                        return (r, c)
-        return (-1 , -1)
+                        s = (r, c)
+        return (s, m)

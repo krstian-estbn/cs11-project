@@ -14,7 +14,7 @@ def game_loop():
     maps = Map()
 
     map_level = maps.map_generator("test.txt")
-    r, c = maps.initial_player_pos(map_level)
+    (r, c), mushrooms = maps.initial_player_pos(map_level)
     if (r, c) == (-1, -1):
         print("Invalid Map!")
         return
@@ -27,11 +27,6 @@ def game_loop():
     while player.status:
         renderer.display_map(map_level, player.points, player.under_l)
         
-        if not any("+" in row for row in map_level):
-            renderer.display_map(map_level, player.points, player.under_l)
-            print("\n\nYou Won!")
-            return False
-        # checks if mushroom still exists
         try:
             move_input = input_handler.get_input()
         except EOFError:
@@ -46,7 +41,11 @@ def game_loop():
             if move == 'Q':
                 quit()
             player.movement(map_level, move, input_handler.moves, row_len, col_len)
-
+            if player.points == mushrooms:
+                renderer.display_map(map_level, player.points, player.under_l)
+                print("\n\nYou Won!")
+                return False
+            # checks if win condition is satisfied
             if not player.status:
                 renderer.display_map(map_level, player.points, player.under_l)
                 print("\n\nGame Over!")
