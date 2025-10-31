@@ -1,4 +1,5 @@
 from engine.game_manager import GameManager
+from player.player_manager import Player
 
 gameManager = GameManager()
 
@@ -12,6 +13,7 @@ class InputHandler:
             "S": (1, 0),
             "D": (0, 1),
             "!": gameManager.reset_game
+            "P": self.Player.pickup_item()
             }
 
     def get_input(self):
