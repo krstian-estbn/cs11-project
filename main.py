@@ -3,19 +3,7 @@ import time
 
 from utils.input_handler import InputHandler
 from engine.renderer import Renderer
-
-def map_generator(level):
-    with open(level, "r") as level_loader:
-        return [list(line.strip()) for line in level_loader]
-    # generates a list of the map from the text file
-
-def initial_player_pos(level):
-    for r, row in enumerate(level):
-        for c, cell in enumerate(row):
-                if cell == "L":
-                    return (r, c)
-    # finds the initial position of the player
-
+from world.map import Map
 
 def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
     action = moves[move]
@@ -91,8 +79,10 @@ def reset_game():
 def game_loop():
     input_handler = InputHandler()
     renderer = Renderer()
-    map_level = map_generator("test.txt")
-    r, c = initial_player_pos(map_level)
+    maps = Map()
+
+    map_level = maps.map_generator("test.txt")
+    r, c = maps.initial_player_pos(map_level)
 
     cur_r, cur_c = r, c
 
