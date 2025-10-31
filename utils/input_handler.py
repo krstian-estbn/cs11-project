@@ -12,7 +12,9 @@ class InputHandler:
             "A": (0, -1),
             "S": (1, 0),
             "D": (0, 1),
-            "!": gameManager.reset_game
+            "!": gameManager.reset_game,
+            "P": (0, 0),
+            "Q": (0, 0)
             }
 
     def get_input(self):
