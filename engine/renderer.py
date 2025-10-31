@@ -11,7 +11,8 @@ class Renderer:
             "-": "⬜",
             "D": "🏊",
             ".": "  ",
-            "x": "🪓"
+            "x": "🪓",
+            "*": "🔥"
         }
 
     def display_map(self, map_level, points, under_l):
