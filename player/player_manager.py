@@ -8,6 +8,19 @@ class Player:
         self.under_l = "."
         self.under_r = {}
         self.status = True
+        self.current_item = ''
+        
+    def pickup_item(self):
+        if self.under_l in ('x', '*'):
+            self.current_item = self.under_l
+        else:
+            pass
+            
+    def axe(self):
+        return
+        
+    def flamethrower(self):
+        return
 
     def movement(self, map_level, move, moves, row_len, col_len):
         action = moves[move]
