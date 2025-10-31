@@ -1,5 +1,6 @@
 import os
 import time
+from utils.input_handler import InputHandler
 
 def map_generator(level):
     with open(level, "r") as level_loader:
@@ -22,18 +23,6 @@ def display_map(map_level, points, under_l, emojis):
         print(*row, sep="")
     print(f"\nYou Collected: {points}🍄")
     print(f"You are under: {emojis[under_l]}")
-
-def check_move_validity(move_input, moves):
-    for ch in move_input:
-        if ch not in moves:
-            return
-        yield ch
-
-def user_inputs(moves):
-    move_input = input("Enter move: ").upper()
-    if move_input:
-        return "".join([*check_move_validity(move_input, moves)])
-    return None
 
 def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
     action = moves[move]
@@ -107,18 +96,12 @@ def reset_game():
         return True
 
 def game_loop():
+    input_handler = InputHandler()
     map_level = map_generator("test.txt")
     r, c = initial_player_pos(map_level)
-    
 
     cur_r, cur_c = r, c
-    moves = {
-        "W": (-1, 0),
-        "A": (0, -1),
-        "S": (1, 0),
-        "D": (0, 1),
-        "!": reset_game
-        }
+
     row_len = len(map_level)
     col_len = len(map_level[0])
     
@@ -147,18 +130,13 @@ def game_loop():
             return False
         # checks if mushroom still exists
 
-        move_input = user_inputs(moves)
-        if move_input is None:
-            print("Invalid moves. Try again.")
-            time.sleep(0.8)
-            continue
+        move_input = input_handler.get_input()
         
         for move in move_input:            
             cur_r, cur_c, under_l, points, status = player_movement(
-                map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points
+                map_level, move, input_handler.moves, row_len, col_len, cur_r, cur_c, under_l, points
             )
-            # display_map(map_level, points, under_l, emojis)
-            time.sleep(0.15)
+
             if status == False:
                 display_map(map_level, points, under_l, emojis)
                 print("\n\nGame Over!")
