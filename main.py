@@ -30,9 +30,11 @@ def game_loop():
             print("\n\nYou Won!")
             return False
         # checks if mushroom still exists
+        try:
+            move_input = input_handler.get_input()
+        except EOFError:
+            continue
 
-        move_input = input_handler.get_input()
-        
         for move in move_input:
             if move == 'P':
                 player.pickup_item()
