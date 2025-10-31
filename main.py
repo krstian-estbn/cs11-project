@@ -23,11 +23,16 @@ def display_map(map_level, points, under_l, emojis):
     print(f"\nYou Collected: {points}🍄")
     print(f"You are under: {emojis[under_l]}")
 
+def check_move_validity(move_input, moves):
+    for ch in move_input:
+        if ch.upper() not in moves:
+            return
+        yield ch
 
 def user_inputs(moves):
     move_input = input("Enter move: ").upper()
-    if move_input and all(ch in moves for ch in move_input):
-        return move_input
+    if move_input:
+        return "".join([*check_validity(move_input, moves)])
     return None
 
 def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
@@ -123,7 +128,7 @@ def main():
         "T": "🌲",
         "L": "👨",
         "+": "🍄",
-        "R": "🪨 ",
+        "R": "🪨",
         "~": "🟦",
         "-": "⬜",
         "D": "🏊",
