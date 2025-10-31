@@ -40,10 +40,12 @@ def game_loop():
             if move == 'Q':
                 quit()
             player.movement(map_level, move, input_handler.moves, row_len, col_len)
+
             if player.points == mushrooms:
                 renderer.display_map(map_level, player.points, player.under_l, player.current_item)
                 print("\n\nYou Won!")
                 return False
+            
             # checks if win condition is satisfied
             if not player.status:
                 renderer.display_map(map_level, player.points, player.under_l, player.current_item)

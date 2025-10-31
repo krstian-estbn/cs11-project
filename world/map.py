@@ -8,12 +8,12 @@ class Map:
 
     def initial_player_pos(self, level):
         s = (-1, -1)
-        m = 0
+        mushrooms = 0
         for r, row in enumerate(level):
             for c, cell in enumerate(row):
                     if cell == '+':
-                        m += 1 
+                        mushrooms += 1 
                         continue
                     if cell == "L":
                         s = (r, c)
-        return (s, m)
+        return (s, mushrooms)
