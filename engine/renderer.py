@@ -26,6 +26,5 @@ class Renderer:
         for row in visual_level:
             print(*row, sep="")
         print(f"\nYou Collected: {points}🍄")
-        print(f"You are under: {self.emojis[under_l]}")
+        print(f"The tile under you: {self.emojis[under_l]}")
         print(f"Current item: {self.emojis[current_item]}")
-
