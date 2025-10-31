@@ -8,7 +8,8 @@ class InputHandler:
             "S": (1, 0),
             "D": (0, 1),
             "!": (0, 0),
-            "P": (0, 0)
+            "P": (0, 0),
+            "Q": (0, 0)
             }
 
     def get_input(self):

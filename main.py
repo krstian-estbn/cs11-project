@@ -43,6 +43,8 @@ def game_loop():
                 return True
             if move == 'P':
                 player.pickup_item()
+            if move == 'Q':
+                quit()
             player.movement(map_level, move, input_handler.moves, row_len, col_len)
 
             if not player.status:

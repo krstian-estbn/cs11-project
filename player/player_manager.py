@@ -17,12 +17,18 @@ class Player:
         else:
             pass
             
-    def axe(self):
+    def axe(self, r, c):
+        self.under_l = '.'
+        self.current_item = ''
+        self.r, self.c = r, c
         return
         
-    def flamethrower(self):
+    def flamethrower(self, x, y):
+        self.under_l = '.'
+        self.current_item = ''
+        self.r, self.c = x, y
         return
-
+    
     def movement(self, map_level, move, moves, row_len, col_len):
         action = moves[move]
         if callable(action):
@@ -33,13 +39,20 @@ class Player:
         new_r, new_c = self.r + dr, self.c + dc
 
 
-        if not (0 <= new_r < row_len and 0 <= new_c < col_len):
+        if not (0 < new_r < row_len and 0 < new_c < col_len):
             return 
         
         target_pos = map_level[new_r][new_c]
         
         if target_pos == "T":
-            return
+            if self.current_item == 'x':
+                map_level[self.r][self.c] = self.under_l
+                self.axe(new_r, new_c)
+                map_level[self.r][self.c] = 'L'
+            elif self.current_item == '*':
+                self.flamethrower(new_r, new_c)
+            else:
+                return
         # tree function                              
 
         if target_pos == "R":  
