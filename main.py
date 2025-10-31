@@ -5,7 +5,7 @@ from utils.input_handler import InputHandler
 from engine.renderer import Renderer
 from world.map import Map
 
-def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
+def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, under_r, points):
     action = moves[move]
     if callable(action):
         action()
@@ -24,23 +24,39 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
         return cur_r, cur_c, under_l, points, True
     # tree function                              
 
-    if target_pos == "R":
-        rock_new_x, rock_new_y = new_r + dr, new_c + dc
-        if not (0 <= rock_new_x < row_len and 0 <= rock_new_y < col_len):
+    if target_pos == "R":  
+        rock_new_x, rock_new_y = new_r + dr, new_c + dc 
+        
+        if not (0 <= rock_new_x < row_len and 0 <= rock_new_y < col_len): 
             return cur_r, cur_c, under_l, points, True
-
-        next_tile = map_level[rock_new_x][rock_new_y]
-        if next_tile in (".", "~", "-"):
-            if next_tile == "~":
-                map_level[rock_new_x][rock_new_y] = "-"
-            elif next_tile in (".", "-"):
+        
+        next_tile = map_level[rock_new_x][rock_new_y] 
+        if next_tile in (".", "~", "-"): 
+            prev_under_rock = under_r.get((new_r, new_c), ".") 
+            # checks if there is a previous block before ilagay si rock 
+            under_r[(rock_new_x, rock_new_y)] = next_tile 
+            # updates whatever was under rock 
+    
+            if next_tile == "~": 
+                map_level[rock_new_x][rock_new_y] = "-" 
+                under_r.pop((rock_new_x, rock_new_y), None) 
+                # removes the previous block before rock becauses it became "-" 
+            
+            elif next_tile in (".", "-"): 
                 map_level[rock_new_x][rock_new_y] = "R"
             
-            map_level[cur_r][cur_c] = under_l
-            under_l = "."
+            # returns what was ever under the rock
+            map_level[new_r][new_c] = prev_under_rock
+            under_r.pop((new_r, new_c), None)
+            
+            # updates what player was under
+            map_level[cur_r][cur_c] = under_l 
+            
+            # si player na ung pumalit sa where rock was stepping into
+            under_l = prev_under_rock
             map_level[new_r][new_c] = "L"
-            cur_r, cur_c = new_r, new_c
-
+            
+            cur_r, cur_c = new_r, new_c 
             return cur_r, cur_c, under_l, points, True
     # rock function
 
@@ -92,6 +108,7 @@ def game_loop():
     points = 0
     status = True
     under_l = "."
+    under_r = {}
 
     while status == True:
         renderer.display_map(map_level, points, under_l)
@@ -106,7 +123,7 @@ def game_loop():
         
         for move in move_input:            
             cur_r, cur_c, under_l, points, status = player_movement(
-                map_level, move, input_handler.moves, row_len, col_len, cur_r, cur_c, under_l, points
+                map_level, move, input_handler.moves, row_len, col_len, cur_r, cur_c, under_l, under_r, points
             )
 
             if status == False:
