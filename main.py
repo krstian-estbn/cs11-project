@@ -25,7 +25,7 @@ def display_map(map_level, points, under_l, emojis):
 
 def check_move_validity(move_input, moves):
     for ch in move_input:
-        if ch.upper() not in moves:
+        if ch not in moves:
             return
         yield ch
 
@@ -104,10 +104,9 @@ def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, unde
 def reset_game():
         print("\nResetting game...")
         time.sleep(1)
-        main()
-        return
+        return True
 
-def main():
+def game_loop():
     map_level = map_generator("test.txt")
     r, c = initial_player_pos(map_level)
     
@@ -145,7 +144,7 @@ def main():
         if not any("+" in row for row in map_level):
             display_map(map_level, points, under_l, emojis)
             print("\n\nYou Won!")
-            return
+            return False
         # checks if mushroom still exists
 
         move_input = user_inputs(moves)
@@ -158,13 +157,19 @@ def main():
             cur_r, cur_c, under_l, points, status = player_movement(
                 map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points
             )
-            display_map(map_level, points, under_l, emojis)
+            # display_map(map_level, points, under_l, emojis)
             time.sleep(0.15)
             if status == False:
                 display_map(map_level, points, under_l, emojis)
                 print("\n\nGame Over!")
-                return
+                return False
 
+def main():
+    while True:
+        if game_loop():
+            continue
+        else:
+            break
 
 if __name__ == "__main__":
     main()
