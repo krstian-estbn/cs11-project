@@ -1,60 +1,13 @@
 import os
 import time
 
-from utils.input_handler import InputHandler
-from engine.renderer import Renderer
 from engine.game_manager import GameManager
-from world.map import Map
-from player.player_manager import Player
 
 gameManager = GameManager()
-def game_loop():
-    input_handler = InputHandler()
-    renderer = Renderer()
-    maps = Map()
-
-    map_level = maps.map_generator("test.txt")
-    (r, c), mushrooms = maps.initial_player_pos(map_level)
-    if (r, c) == (-1, -1):
-        print("Invalid Map!")
-        return
-
-    player = Player(r, c)
-
-    row_len = len(map_level)
-    col_len = len(map_level[0])
-    
-    while player.status:
-        renderer.display_map(map_level, player.points, player.under_l, player.current_item)
-        
-        try:
-            move_input = input_handler.get_input()
-        except EOFError:
-            continue
-
-        for move in move_input:
-            if move == '!':
-                return gameManager.reset_game() 
-            if move == 'P':
-                player.pickup_item()
-            if move == 'Q':
-                quit()
-            player.movement(map_level, move, input_handler.moves, row_len, col_len)
-
-            if player.points == mushrooms:
-                renderer.display_map(map_level, player.points, player.under_l, player.current_item)
-                print("\n\nYou Won!")
-                return False
-            
-            # checks if win condition is satisfied
-            if not player.status:
-                renderer.display_map(map_level, player.points, player.under_l, player.current_item)
-                print("\n\nGame Over!")
-                return False
 
 def main():
     while True:
-        if game_loop():
+        if gameManager.game_loop():
             continue
         else:
             break
