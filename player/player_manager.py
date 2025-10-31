@@ -13,6 +13,7 @@ class Player:
     def pickup_item(self):
         if self.under_l in ('x', '*'):
             self.current_item = self.under_l
+            self.under_l = '.'
         else:
             pass
             
