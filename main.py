@@ -1,6 +1,8 @@
 import os
 import time
+
 from utils.input_handler import InputHandler
+from engine.renderer import Renderer
 
 def map_generator(level):
     with open(level, "r") as level_loader:
@@ -13,16 +15,7 @@ def initial_player_pos(level):
                 if cell == "L":
                     return (r, c)
     # finds the initial position of the player
-def beautify(level, emojis):
-    return [[emojis.get(cell, cell) for cell in row] for row in level]
 
-def display_map(map_level, points, under_l, emojis):
-    os.system('cls')
-    visual_level = beautify(map_level, emojis)
-    for row in visual_level:
-        print(*row, sep="")
-    print(f"\nYou Collected: {points}🍄")
-    print(f"You are under: {emojis[under_l]}")
 
 def player_movement(map_level, move, moves, row_len, col_len, cur_r, cur_c, under_l, points):
     action = moves[move]
@@ -97,6 +90,7 @@ def reset_game():
 
 def game_loop():
     input_handler = InputHandler()
+    renderer = Renderer()
     map_level = map_generator("test.txt")
     r, c = initial_player_pos(map_level)
 
@@ -105,27 +99,15 @@ def game_loop():
     row_len = len(map_level)
     col_len = len(map_level[0])
     
-    
-    emojis = {
-        "T": "🌲",
-        "L": "👨",
-        "+": "🍄",
-        "R": "🪨",
-        "~": "🟦",
-        "-": "⬜",
-        "D": "🏊",
-        ".": "  ",
-        "x": "🪓"
-    }
     points = 0
     status = True
     under_l = "."
 
     while status == True:
-        display_map(map_level, points, under_l, emojis)
+        renderer.display_map(map_level, points, under_l)
         
         if not any("+" in row for row in map_level):
-            display_map(map_level, points, under_l, emojis)
+            renderer.display_map(map_level, points, under_l)
             print("\n\nYou Won!")
             return False
         # checks if mushroom still exists
@@ -138,7 +120,7 @@ def game_loop():
             )
 
             if status == False:
-                display_map(map_level, points, under_l, emojis)
+                renderer.display_map(map_level, points, under_l)
                 print("\n\nGame Over!")
                 return False
 
