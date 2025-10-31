@@ -3,9 +3,11 @@ import time
 
 from utils.input_handler import InputHandler
 from engine.renderer import Renderer
+from engine.game_manager import GameManager
 from world.map import Map
 from player.player_manager import Player
 
+gameManager = GameManager()
 def game_loop():
     input_handler = InputHandler()
     renderer = Renderer()
@@ -30,13 +32,18 @@ def game_loop():
             print("\n\nYou Won!")
             return False
         # checks if mushroom still exists
+        try:
+            move_input = input_handler.get_input()
+        except EOFError:
+            continue
 
-        move_input = input_handler.get_input()
-        
         for move in move_input:
+            if move == '!':
+                gameManager.reset_game()
+                return True
             if move == 'P':
                 player.pickup_item()
-            elif move == 'Q':
+            if move == 'Q':
                 quit()
             player.movement(map_level, move, input_handler.moves, row_len, col_len)
 

@@ -3,7 +3,7 @@ class Map:
         pass
 
     def map_generator(self, level):
-        with open(level, "r") as level_loader:
+        with open(level, "r", encoding="utf-8") as level_loader:
             return [list(line.strip()) for line in level_loader]
 
     def initial_player_pos(self, level):
