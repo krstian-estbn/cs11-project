@@ -34,8 +34,7 @@ def game_loop():
 
         for move in move_input:
             if move == '!':
-                gameManager.reset_game()
-                return True
+                return gameManager.reset_game() 
             if move == 'P':
                 player.pickup_item()
             if move == 'Q':
