@@ -15,7 +15,7 @@ class Renderer:
             "*": "🔥"
         }
 
-    def display_map(self, map_level, points, under_l):
+    def display_map(self, map_level, points, under_l, current_item):
         def beautify(level):
             return [[self.emojis.get(cell, cell) for cell in row] for row in level]
 
@@ -26,4 +26,5 @@ class Renderer:
             print(*row, sep="")
         print(f"\nYou Collected: {points}🍄")
         print(f"You are under: {self.emojis[under_l]}")
+        print(f"You currently have: {self.emojis[current_item] if current_item else ""}")
 
