@@ -3,9 +3,11 @@ import time
 
 from utils.input_handler import InputHandler
 from engine.renderer import Renderer
+from engine.game_manager import GameManager
 from world.map import Map
 from player.player_manager import Player
 
+gameManager = GameManager()
 def game_loop():
     input_handler = InputHandler()
     renderer = Renderer()
@@ -36,6 +38,9 @@ def game_loop():
             continue
 
         for move in move_input:
+            if move == '!':
+                gameManager.reset_game()
+                return True
             if move == 'P':
                 player.pickup_item()
             player.movement(map_level, move, input_handler.moves, row_len, col_len)

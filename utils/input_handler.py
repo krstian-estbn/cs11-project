@@ -1,7 +1,3 @@
-from engine.game_manager import GameManager
-
-gameManager = GameManager()
-
 class InputHandler:
     """Handles input for the player"""
 
@@ -11,7 +7,7 @@ class InputHandler:
             "A": (0, -1),
             "S": (1, 0),
             "D": (0, 1),
-            "!": gameManager.reset_game,
+            "!": (0, 0),
             "P": (0, 0)
             }
 
