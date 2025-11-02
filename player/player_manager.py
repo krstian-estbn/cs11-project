@@ -28,11 +28,43 @@ class Player:
         map_level[self.r][self.c] = 'L'
         return
         
-    def flamethrower(self, x, y):
+    def flamethrower(self, map_level, x, y):
+        map_level[self.r][self.c] = self.under_l
+
+        # removes first tree and removes flamethrower
         self.under_l = '.'
         self.current_item = ''
+
         self.r, self.c = x, y
-        return
+        map_level[self.r][self.c] = "L"
+
+        # add adjacent trees to player
+        burn = set()
+        for adj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor = (adj[0] + self.r, adj[1] + self.c)
+            if 0 <= neighbor[0] < len(map_level) and 0 <= neighbor[1] < len(map_level[0]) and map_level[neighbor[0]][neighbor[1]] == "T":
+                            burn.add(neighbor)
+
+        visited = set()
+        for neigh in burn:
+            adj_trees = [neigh]
+
+            while adj_trees:
+                i, j = adj_trees.pop()
+                if (i, j) in visited:
+                    continue
+                
+                #remove tree
+                visited.add((i, j))
+                map_level[i][j] = "."
+                
+                # add all adjacent trees of the adjacent trees to the list
+                for adj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    neighbor = i + adj[0] , j + adj[1]
+                    if 0 <= neighbor[0] < len(map_level) and 0 <= neighbor[1] < len(map_level[0]) and (neighbor[0], neighbor[1]) not in visited:
+                        if map_level[neighbor[0]][neighbor[1]] == "T":
+                            adj_trees.append((neighbor[0], neighbor[1]))
+        
     
     def movement(self, map_level, move, moves, row_len, col_len):
         action = moves[move]
@@ -44,7 +76,7 @@ class Player:
         new_r, new_c = self.r + dr, self.c + dc
 
 
-        if not (0 < new_r < row_len and 0 < new_c < col_len):
+        if not (0 <= new_r < row_len and 0 <= new_c < col_len):
             return 
         
         target_pos = map_level[new_r][new_c]
@@ -53,8 +85,7 @@ class Player:
             if self.current_item == 'x':
                 self.axe(map_level, new_r, new_c)
             elif self.current_item == '*':
-                map_level[self.r][self.c] = self.under_l
-                self.flamethrower(new_r, new_c)
+                self.flamethrower(map_level, new_r, new_c)
             else:
                 return
         # tree function                              
@@ -104,7 +135,7 @@ class Player:
             return
         # water function
 
-        if target_pos in ("+", ".", "-", "x"):
+        if target_pos in ("+", ".", "-", "x", "*"):
             map_level[self.r][self.c] = self.under_l
             if target_pos == "+":
                 self.points += 1
