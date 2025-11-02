@@ -60,7 +60,6 @@ class GameManager:
             for move in move_input:
                 if move == '!':
                     self.initial_movement = move_input.split('!', 1)[1]
-                    print(self.initial_movement)
                     return self.reset_game() 
                 if move == 'P':
                     self.player.pickup_item()
