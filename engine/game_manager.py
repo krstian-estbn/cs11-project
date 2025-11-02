@@ -15,11 +15,12 @@ class GameManager:
         self.mushroom_count = 0
         self.row_len = 0
         self.col_len = 0
+        self.initial_movement = ""
 
 
     def reset_game(self):
         print("\nResetting game...")
-        time.sleep(1)
+        time.sleep(0.5)
         return True
 
     def initialize_game(self, map_file="test.txt"):
@@ -47,12 +48,19 @@ class GameManager:
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
             
             try:
-                move_input = self.input_handler.get_input()
+                "AA!AA The player must move AA still after the game being reset"
+                if self.initial_movement:
+                    move_input = self.initial_movement
+                else:
+                    move_input = self.input_handler.get_input()
+
             except EOFError:
                 continue
 
             for move in move_input:
                 if move == '!':
+                    self.initial_movement = move_input.split('!', 1)[1]
+                    print(self.initial_movement)
                     return self.reset_game() 
                 if move == 'P':
                     self.player.pickup_item()
@@ -70,3 +78,5 @@ class GameManager:
                     self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
                     print("\n\nGame Over!")
                     return False
+                
+            self.initial_movement = ""
