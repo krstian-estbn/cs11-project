@@ -17,10 +17,15 @@ class Player:
         else:
             pass
             
-    def axe(self, r, c):
+    def axe(self, map_level, r, c):
+        map_level[self.r][self.c] = self.under_l
+
+        # removes tree and removes axe
         self.under_l = '.'
         self.current_item = ''
+
         self.r, self.c = r, c
+        map_level[self.r][self.c] = 'L'
         return
         
     def flamethrower(self, x, y):
@@ -46,10 +51,9 @@ class Player:
         
         if target_pos == "T":
             if self.current_item == 'x':
-                map_level[self.r][self.c] = self.under_l
-                self.axe(new_r, new_c)
-                map_level[self.r][self.c] = 'L'
+                self.axe(map_level, new_r, new_c)
             elif self.current_item == '*':
+                map_level[self.r][self.c] = self.under_l
                 self.flamethrower(new_r, new_c)
             else:
                 return
