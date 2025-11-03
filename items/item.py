@@ -1,5 +1,3 @@
-import time
-
 class Item:
     def __init__(self, symbol):
         self.symbol = symbol
