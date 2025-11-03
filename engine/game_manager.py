@@ -3,7 +3,7 @@ import time
 from utils.input_handler import InputHandler
 from engine.renderer import Renderer
 from world.map import Map
-from player.player_manager import Player
+from entities.player import Player
 
 class GameManager:
     def __init__(self):

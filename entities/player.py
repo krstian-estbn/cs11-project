@@ -1,4 +1,4 @@
-from items.item import Item
+from entities.item import Item
 
 class Player:
     """Handles player behavior"""
