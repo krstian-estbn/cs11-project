@@ -68,14 +68,22 @@ class GameManager:
                 self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
 
                 if self.player.points == self.mushroom_count:
-                    self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
-                    print("\n\nYou Won!")
-                    return False
+                    if '!' not in move_input:
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
+                        print("\n\nYou Won!")
+                        return False
+                    else:
+                        self.initial_movement = move_input.split('!', 1)[1]
+                        return self.reset_game()
                 
                 # checks if win condition is satisfied
                 if not self.player.status:
-                    self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
-                    print("\n\nGame Over!")
-                    return False
-                
+                    # checks if restart (!) is present
+                    if '!' not in move_input:
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
+                        print("\n\nGame Over!")
+                        return False
+                    else:
+                        self.initial_movement = move_input.split('!', 1)[1]
+                        return self.reset_game()
             self.initial_movement = ""
