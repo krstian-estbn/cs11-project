@@ -11,18 +11,18 @@ class Item:
         elif self.symbol == "*":
             return self.burn_trees()
 
-    # def chop_tree(self, map_level, under_l, player_r, player_c, target_r, target_c):
-    #     map_level[player_r][player_c] = under_l
+    def chop_tree(self, map_level, under_l, player_r, player_c, target_r, target_c):
+        map_level[player_r][player_c] = under_l
 
-    #     # removes tree and removes axe
-    #     under_l = '.'
+        # removes tree and removes axe
+        under_l = '.'
 
-    #     player_r, player_c = target_r, target_c
-    #     map_level[player_r][player_c] = 'L'
+        player_r, player_c = target_r, target_c
+        map_level[player_r][player_c] = 'L'
 
-    #     return under_l, player_r, player_c
+        return under_l, player_r, player_c
 
-    #     def flamethrower(self, map_level, x, y):
+    # def flamethrower(self, map_level, x, y):
     #     map_level[self.r][self.c] = self.under_l
 
     #     # removes first tree and removes flamethrower
