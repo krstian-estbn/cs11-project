@@ -10,7 +10,7 @@ class Player:
         self.under_l = "."
         self.under_r = {}
         self.status = True
-        self.item = None
+        self.item = ""
         
     def pickup_item(self):
         if self.under_l in ('x', '*'):
@@ -36,9 +36,10 @@ class Player:
         target_pos = map_level[new_r][new_c]
         
         if target_pos == "T":
-            if self.item != None:
+            if self.item:
                 self.under_l, self.r, self.c = self.item.use(map_level, self.under_l, self.r, self.c, new_r, new_c)
                 del self.item
+                self.item = ""
             else:
                 return
         # tree function                              

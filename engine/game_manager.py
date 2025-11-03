@@ -45,7 +45,7 @@ class GameManager:
             return False
 
         while self.player.status:
-            self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
+            self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
             
             try:
                 "AA!AA The player must move AA still after the game being reset"
@@ -69,7 +69,7 @@ class GameManager:
 
                 if self.player.points == self.mushroom_count:
                     if '!' not in move_input:
-                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else "")
                         print("\n\nYou Won!")
                         return False
                     else:
@@ -80,7 +80,7 @@ class GameManager:
                 if not self.player.status:
                     # checks if restart (!) is present
                     if '!' not in move_input:
-                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.current_item)
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
                         print("\n\nGame Over!")
                         return False
                     else:
