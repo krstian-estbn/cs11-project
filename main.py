@@ -9,5 +9,5 @@ def main():
         else:
             break
 
-if __name__ == "__shroom_raider__":
+if __name__ == "__main__":
     main()
