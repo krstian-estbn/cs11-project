@@ -99,8 +99,8 @@ class GameManager:
                         self.initial_movement = move_input.split('!', 1)[1]
                         return self.reset_game()
             
-            # checks if it was from a preset move with an output file
-            if preset_moves and output_file:
+            # checks if it has an output file
+            if output_file:
                 cleared_status = (self.player.points == self.mushroom_count)
                 with open(output_file, "w", encoding="utf-8") as file:
                     file.write("CLEAR\n" if cleared_status else "NO CLEAR\n")
