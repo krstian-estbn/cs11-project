@@ -1,4 +1,5 @@
 import time
+import sys
 
 from utils.input_handler import InputHandler
 from engine.renderer import Renderer
@@ -23,9 +24,12 @@ class GameManager:
         time.sleep(0.5)
         return True
 
-    def initialize_game(self, map_file="test.txt"):
+    def initialize_game(self, map_file):
         """initialize or reset the game state"""
-        self.map_level = self.maps.map_generator(map_file)
+        try:
+            self.map_level = self.maps.map_generator(f"world/{map_file}")
+        except FileNotFoundError:
+            self.map_level = self.maps.map_generator("world/default_map.txt")
         (r, c), self.mushroom_count = self.maps.initial_player_pos(self.map_level)
 
         if (r, c) == (-1, -1):
@@ -38,15 +42,15 @@ class GameManager:
 
         return True
 
-    def game_loop(self):
-
+    def game_loop(self, map, preset_moves, output_file):
         #initialize
-        if not self.initialize_game():
+        if not self.initialize_game(map):
             return False
 
         while self.player.status:
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
-            
+            if preset_moves:
+                self.initial_movement = preset_moves
             try:
                 "AA!AA The player must move AA still after the game being reset"
                 if self.initial_movement:

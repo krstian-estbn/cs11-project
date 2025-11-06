@@ -4,6 +4,7 @@ class Map:
 
     def map_generator(self, level):
         with open(level, "r", encoding="utf-8") as level_loader:
+            level_loader.readline()
             return [list(line.strip()) for line in level_loader]
 
     def initial_player_pos(self, level):
