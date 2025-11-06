@@ -46,7 +46,15 @@ class GameManager:
         #initialize
         if not self.initialize_game(map):
             return False
-
+        
+        if preset_moves:
+            try:
+                with open(preset_moves, "r", encoding="utf-8") as input_moves:
+                    preset_moves = input_moves.read().replace("\n", "").strip()
+            except FileNotFoundError:
+                pass
+        
+        
         while self.player.status:
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
             if preset_moves:
@@ -90,4 +98,14 @@ class GameManager:
                     else:
                         self.initial_movement = move_input.split('!', 1)[1]
                         return self.reset_game()
+            
+            # checks if it was from a preset move with an output file
+            if preset_moves and output_file:
+                cleared_status = (self.player.points == self.mushroom_count)
+                with open(output_file, "w", encoding="utf-8") as file:
+                    file.write("CLEAR\n" if cleared_status else "NO CLEAR\n")
+                    for row in self.map_level:
+                        file.write("".join(row) + "\n")
+                return False
+            
             self.initial_movement = ""
