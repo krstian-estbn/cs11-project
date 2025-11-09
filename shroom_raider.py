@@ -1,23 +1,22 @@
 from engine.game_manager import GameManager
 from test_folder import tester
 import sys
+from argparse import ArgumentParser
 
 gameManager = GameManager()
+parser = ArgumentParser()
+parser.add_argument('-f', '--stage_file', default='world/default_map.txt')
+parser.add_argument('-m', '--moves', default=None)
+parser.add_argument('-o', '--output_file', default=None)
+args = parser.parse_args()
 
 def main():
+    
     while True:
-        if len(sys.argv) == 1:
-            if gameManager.game_loop("default_map.txt", None, None):
-                continue
-            else:
-                break
-        elif len(sys.argv) == 2:
-            if gameManager.game_loop(sys.argv[1], None, None):
-                continue
-            else:
-                break
+        if gameManager.game_loop(args.stage_file, args.moves, args.output_file):
+            continue
         else:
-            gameManager.game_loop(sys.argv[1], sys.argv[2], sys.argv[3])
+            break
 
 if __name__ == "__main__":
     main()

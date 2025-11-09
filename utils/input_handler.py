@@ -12,7 +12,7 @@ class InputHandler:
             "Q": (0, 0)
             }
 
-    def get_input(self):
+    def get_input(self, premove):
         """Get user input"""
 
         def get_valid_moves(move_input):
@@ -20,9 +20,11 @@ class InputHandler:
                 if ch not in self.moves:
                     return
                 yield ch
-
-        move_input = input("Enter move: ").upper()
-        return "".join([*get_valid_moves(move_input)])
+        if premove is None:
+            move_input = input("Enter move: ").upper()
+            return "".join([*get_valid_moves(move_input)])
+        else:
+            return "".join([*get_valid_moves(premove)])
 
 
 
