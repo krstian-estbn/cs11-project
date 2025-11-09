@@ -75,6 +75,14 @@ class GameManager:
         #initialize
         if not self.initialize_game(map):
             return False
+         # error handling
+        if self.player is None:
+            print("Player not Initialized")
+            return False
+        elif self.map_level is None:
+            print("Map Level not Initialized")
+            return False
+          
         if preset_moves:
             preset_moves = self.input_handler.get_input(preset_moves)
             self.game_turn(preset_moves)
@@ -85,6 +93,7 @@ class GameManager:
                     f.write("".join(x))
                     f.write("\n")
             return False
+
         while self.player.status:
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
             try:
@@ -112,3 +121,44 @@ class GameManager:
 
 
             
+
+            for move in move_input:
+                if move == '!':
+                    self.initial_movement = move_input.split('!', 1)[1]
+                    return self.reset_game()
+                if move == 'P':
+                    self.player.pickup_item()
+                if move == 'Q':
+                    quit()
+                self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
+
+                if self.player.points == self.mushroom_count:
+                    if '!' not in move_input:
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else "")
+                        print("\n\nYou Won!")
+                        return False
+                    else:
+                        self.initial_movement = move_input.split('!', 1)[1]
+                        return self.reset_game()
+
+                # checks if win condition is satisfied
+                if not self.player.status:
+                    # checks if restart (!) is present
+                    if '!' not in move_input:
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
+                        print("\n\nGame Over!")
+                        return False
+                    else:
+                        self.initial_movement = move_input.split('!', 1)[1]
+                        return self.reset_game()
+
+            # checks if it has an output file
+            if output_file:
+                cleared_status = (self.player.points == self.mushroom_count)
+                with open(output_file, "w", encoding="utf-8") as file:
+                    file.write("CLEAR\n" if cleared_status else "NO CLEAR\n")
+                    for row in self.map_level:
+                        file.write("".join(row) + "\n")
+                return False
+
+            self.initial_movement = ""
