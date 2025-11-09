@@ -1,10 +1,11 @@
-import time
 import os
+import time
 
-from utils.input_handler import InputHandler
 from engine.renderer import Renderer
-from world.map import Map
 from entities.player import Player
+from utils.input_handler import InputHandler
+from world.map import Map
+
 
 class GameManager:
     def __init__(self):
@@ -17,7 +18,6 @@ class GameManager:
         self.row_len = 0
         self.col_len = 0
         self.initial_movement = ""
-
 
     def reset_game(self):
         print("\nResetting game...")
@@ -35,7 +35,7 @@ class GameManager:
         if (r, c) == (-1, -1):
             print("Invalid Map: No 'L' in Map!")
             return False
-        
+
         self.player = Player(r, c)
         self.row_len = len(self.map_level)
         self.col_len = len(self.map_level[0])
@@ -43,15 +43,17 @@ class GameManager:
         return True
 
     def write_output(self, output_file):
-        os.system('cls')
+        os.system("cls")
         with open(f"test_folder/{output_file}", "w") as f:
-            f.write("CLEAR\n") if self.player.points == self.mushroom_count else f.write("NO CLEAR\n")
+            f.write(
+                "CLEAR\n"
+            ) if self.player.points == self.mushroom_count else f.write("NO CLEAR\n")
             for x in self.map_level:
                 f.write("".join(x))
                 f.write("\n")
 
     def game_loop(self, map, preset_moves, output_file):
-        #initialize
+        # initialize
         if not self.initialize_game(map):
             return False
 
@@ -65,39 +67,59 @@ class GameManager:
 
         while self.player.status:
             if not preset_moves:
-                self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else None, self.mushroom_count)
+                self.renderer.display_map(
+                    self.map_level,
+                    self.player.points,
+                    self.player.under_l,
+                    self.player.item.symbol if self.player.item else None,
+                    self.mushroom_count,
+                )
             try:
                 # AA!AA The player must move AA still after the game being reset
                 if self.initial_movement:
                     move_input = self.initial_movement
                 else:
-                    move_input = self.input_handler.get_input(preset_moves.upper() if preset_moves else None)
+                    move_input = self.input_handler.get_input(
+                        preset_moves.upper() if preset_moves else None
+                    )
 
             except EOFError:
                 continue
 
             for move in move_input:
-                if move == '!':
-                    self.initial_movement = move_input.split('!', 1)[1]
+                if move == "!":
+                    self.initial_movement = move_input.split("!", 1)[1]
                     return self.reset_game()
-                if move == 'P':
+                if move == "P":
                     self.player.pickup_item()
                     continue
-                if move == 'Q':
+                if move == "Q":
                     quit()
-                self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
-                
+                self.player.movement(
+                    self.map_level,
+                    move,
+                    self.input_handler.moves,
+                    self.row_len,
+                    self.col_len,
+                )
+
                 # checks if win condition is satisfied
                 if self.player.points == self.mushroom_count or not self.player.status:
                     # checks if restart (!) is present
-                    if '!' in move_input:
-                        self.initial_movement = move_input.split('!', 1)[1]
+                    if "!" in move_input:
+                        self.initial_movement = move_input.split("!", 1)[1]
                         return self.reset_game()
                     elif preset_moves:
                         self.write_output(output_file)
                         return False
                     else:
-                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else None, self.mushroom_count)
+                        self.renderer.display_map(
+                            self.map_level,
+                            self.player.points,
+                            self.player.under_l,
+                            self.player.item.symbol if self.player.item else None,
+                            self.mushroom_count,
+                        )
                         print("\n\nYou Won!" if self.player.status else "\n\nYou Lost!")
                         return False
 

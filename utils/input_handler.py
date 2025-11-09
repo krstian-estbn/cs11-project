@@ -9,8 +9,8 @@ class InputHandler:
             "D": (0, 1),
             "!": (0, 0),
             "P": (0, 0),
-            "Q": (0, 0)
-            }
+            "Q": (0, 0),
+        }
 
     def get_input(self, premove):
         """Get user input"""
@@ -20,12 +20,9 @@ class InputHandler:
                 if ch not in self.moves:
                     return
                 yield ch
-                
+
         if premove is None:
             move_input = input("What will you do? ").upper()
             return "".join([*get_valid_moves(move_input)])
         else:
             return "".join([*get_valid_moves(premove)])
-
-
-

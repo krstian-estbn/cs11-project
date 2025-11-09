@@ -12,9 +12,9 @@ class Map:
         mushrooms = 0
         for r, row in enumerate(level):
             for c, cell in enumerate(row):
-                    if cell == '+':
-                        mushrooms += 1 
-                        continue
-                    if cell == "L":
-                        s = (r, c)
+                if cell == "+":
+                    mushrooms += 1
+                    continue
+                if cell == "L":
+                    s = (r, c)
         return (s, mushrooms)
