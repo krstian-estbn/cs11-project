@@ -20,7 +20,7 @@ class InputHandler:
                 if ch not in self.moves:
                     return
                 yield ch
-        if premove == None:
+        if premove is None:
             move_input = input("Enter move: ").upper()
             return "".join([*get_valid_moves(move_input)])
         else:
