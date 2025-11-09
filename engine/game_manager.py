@@ -47,14 +47,21 @@ class GameManager:
         if not self.initialize_game(map):
             return False
         
+        # error handling
+        if self.player is None:
+            print("Player not Initialized")
+            return False
+        elif self.map_level is None:
+            print("Map Level not Initialized")
+            return False
+
         if preset_moves:
             try:
                 with open(preset_moves, "r", encoding="utf-8") as input_moves:
                     preset_moves = input_moves.read().replace("\n", "").strip()
             except FileNotFoundError:
                 pass
-        
-        
+
         while self.player.status:
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
             if preset_moves:
@@ -72,7 +79,7 @@ class GameManager:
             for move in move_input:
                 if move == '!':
                     self.initial_movement = move_input.split('!', 1)[1]
-                    return self.reset_game() 
+                    return self.reset_game()
                 if move == 'P':
                     self.player.pickup_item()
                 if move == 'Q':
@@ -87,7 +94,7 @@ class GameManager:
                     else:
                         self.initial_movement = move_input.split('!', 1)[1]
                         return self.reset_game()
-                
+
                 # checks if win condition is satisfied
                 if not self.player.status:
                     # checks if restart (!) is present
@@ -98,7 +105,7 @@ class GameManager:
                     else:
                         self.initial_movement = move_input.split('!', 1)[1]
                         return self.reset_game()
-            
+
             # checks if it has an output file
             if output_file:
                 cleared_status = (self.player.points == self.mushroom_count)
@@ -107,5 +114,5 @@ class GameManager:
                     for row in self.map_level:
                         file.write("".join(row) + "\n")
                 return False
-            
+
             self.initial_movement = ""
