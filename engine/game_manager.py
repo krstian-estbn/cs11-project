@@ -101,11 +101,7 @@ class GameManager:
                         print("\n\nYou Won!" if self.player.status else "\n\nYou Lost!")
                         return False
 
-            # dont render if moves are done through terminal
-            if not preset_moves:
-                self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else None, self.mushroom_count)
             self.initial_movement = ""
-
 
             if preset_moves:
                 self.write_output(output_file)
