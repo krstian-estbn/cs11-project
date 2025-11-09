@@ -25,6 +25,12 @@ class Renderer:
 
         for row in visual_level:
             print(*row, sep="")
-        print(f"\nYou Collected: 🍄 {points}/{mushroom_count}")
-        print(f"Item below: {self.emojis[under_l]}")
-        print(f"Current item: {self.emojis[item]}")
+        print(f"\n{points} out of {mushroom_count} mushroom(s) collected\n")
+
+        print("[W] Move up")
+        print("[A] Move left")
+        print("[S] Move down")
+        print("[D] Move right")
+        print("[!] Reset\n")
+        print(f"[P] Pick up {self.emojis[under_l]}" if under_l in ("x", "*") else "No items here")
+        print(f"Current holding {self.emojis[item]}" if item is not None else "Not holding anything\n")
