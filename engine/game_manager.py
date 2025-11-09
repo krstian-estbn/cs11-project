@@ -1,5 +1,5 @@
 import time
-import os
+import sys
 
 from utils.input_handler import InputHandler
 from engine.renderer import Renderer
@@ -21,7 +21,7 @@ class GameManager:
 
     def reset_game(self):
         print("\nResetting game...")
-        time.sleep(0.2)
+        time.sleep(0.5)
         return True
 
     def initialize_game(self, map_file):
@@ -42,73 +42,77 @@ class GameManager:
 
         return True
 
-    def game_turn(self, move_input):
-        for index, move in enumerate(move_input):
-            if move == '!':
-                self.initial_movement == move_input[index+1:]
-                return '!'
-            if move == 'P':
-                self.player.pickup_item()
-                continue
-            if move == 'Q':
-                quit()
-            self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
-
-            if self.player.points == self.mushroom_count:
-                if '!' in move_input[index+1:]:
-                    self.initial_movement == move_input[index+2:]
-                    return '!'
-                else:
-                    return False
-            
-            # checks if win condition is satisfied
-            if not self.player.status:
-                # checks if restart (!) is present
-                if move_input[index+1] == '!':
-                    self.initial_movement == move_input[index+2:]
-                    return '!'
-                else:
-                    return False
-        return 
-
     def game_loop(self, map, preset_moves, output_file):
         #initialize
         if not self.initialize_game(map):
             return False
-        if preset_moves:
-            preset_moves = self.input_handler.get_input(preset_moves)
-            self.game_turn(preset_moves)
-            os.system('cls')
-            with open(f"test_folder/{output_file}", "w") as f:
-                f.write("CLEAR") if self.player.points == self.mushroom_count else f.write("NO CLEAR")
-                for x in self.map_level:
-                    f.write("".join(x))
-                    f.write("\n")
+        
+        # error handling
+        if self.player is None:
+            print("Player not Initialized")
             return False
+        elif self.map_level is None:
+            print("Map Level not Initialized")
+            return False
+
+        if preset_moves:
+            try:
+                with open(preset_moves, "r", encoding="utf-8") as input_moves:
+                    preset_moves = input_moves.read().replace("\n", "").strip()
+            except FileNotFoundError:
+                pass
+
         while self.player.status:
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
+            if preset_moves:
+                self.initial_movement = preset_moves
             try:
                 "AA!AA The player must move AA still after the game being reset"
                 if self.initial_movement:
                     move_input = self.initial_movement
                 else:
-                    move_input = self.input_handler.get_input(None)
+                    move_input = self.input_handler.get_input()
 
             except EOFError:
                 continue
-            
-            self.game_turn(move_input)
-            if self.initial_movement:
-                return self.reset_game()
-            self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else "")
-            if self.player.points == self.mushroom_count:
-                print("\n\nYou Won!")
-                return False
-            else:
+
+            for move in move_input:
+                if move == '!':
+                    self.initial_movement = move_input.split('!', 1)[1]
+                    return self.reset_game()
+                if move == 'P':
+                    self.player.pickup_item()
+                if move == 'Q':
+                    quit()
+                self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
+
+                if self.player.points == self.mushroom_count:
+                    if '!' not in move_input:
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else "")
+                        print("\n\nYou Won!")
+                        return False
+                    else:
+                        self.initial_movement = move_input.split('!', 1)[1]
+                        return self.reset_game()
+
+                # checks if win condition is satisfied
                 if not self.player.status:
-                    print("\n\nGame Over!")
-                    return False
+                    # checks if restart (!) is present
+                    if '!' not in move_input:
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
+                        print("\n\nGame Over!")
+                        return False
+                    else:
+                        self.initial_movement = move_input.split('!', 1)[1]
+                        return self.reset_game()
 
+            # checks if it has an output file
+            if output_file:
+                cleared_status = (self.player.points == self.mushroom_count)
+                with open(output_file, "w", encoding="utf-8") as file:
+                    file.write("CLEAR\n" if cleared_status else "NO CLEAR\n")
+                    for row in self.map_level:
+                        file.write("".join(row) + "\n")
+                return False
 
-
-            
+            self.initial_movement = ""
