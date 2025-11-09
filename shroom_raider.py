@@ -1,6 +1,5 @@
 from engine.game_manager import GameManager
-from test_folder import tester
-import sys
+
 from argparse import ArgumentParser
 
 gameManager = GameManager()
