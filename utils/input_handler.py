@@ -1,3 +1,5 @@
+from termcolor import colored
+
 class InputHandler:
     """Handles input for the player"""
 
@@ -22,7 +24,7 @@ class InputHandler:
                 yield ch
                 
         if premove is None:
-            move_input = input("What will you do? ").upper()
+            move_input = input(colored("\nWhat will you do? ", "white", attrs=["bold"])).upper()
             return "".join([*get_valid_moves(move_input)])
         else:
             return "".join([*get_valid_moves(premove)])

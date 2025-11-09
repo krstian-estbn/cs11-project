@@ -65,7 +65,7 @@ class GameManager:
 
         while self.player.status:
             if not preset_moves:
-                self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else None, self.mushroom_count)
+                self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else None, self.mushroom_count, self.player.status)
             try:
                 # AA!AA The player must move AA still after the game being reset
                 if self.initial_movement:
@@ -97,13 +97,13 @@ class GameManager:
                         self.write_output(output_file)
                         return False
                     else:
-                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else None, self.mushroom_count)
-                        print("\n\nYou Won!" if self.player.status else "\n\nYou Lost!")
+                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else None, self.mushroom_count, self.player.status)
+                        self.renderer.end_text(self.player.status)
                         return False
 
             # dont render if moves are done through terminal
             if not preset_moves:
-                self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else None, self.mushroom_count)
+                self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else None, self.mushroom_count, self.player.status)
             self.initial_movement = ""
 
 
