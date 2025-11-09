@@ -43,30 +43,22 @@ class GameManager:
         return True
 
     def game_turn(self, move_input):
-        for index, move in enumerate(move_input):
+        for move in move_input:
             if move == '!':
-                self.initial_movement == move_input[index+1:]
-                return '!'
+                self.initial_movement = move_input.split('!', 1)[1]
+                return self.reset_game()
             if move == 'P':
                 self.player.pickup_item()
                 continue
             if move == 'Q':
                 quit()
             self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
-
-            if self.player.points == self.mushroom_count:
-                if '!' in move_input[index+1:]:
-                    self.initial_movement == move_input[index+2:]
-                    return '!'
-                else:
-                    return False
-            
             # checks if win condition is satisfied
-            if not self.player.status:
+            if self.player.points == self.mushroom_count or not self.player.status:
                 # checks if restart (!) is present
-                if move_input[index+1] == '!':
-                    self.initial_movement == move_input[index+2:]
-                    return '!'
+                if '!' in move_input:
+                    self.initial_movement = move_input.split('!', 1)[1]
+                    return self.reset_game()
                 else:
                     return False
         return 
@@ -110,6 +102,7 @@ class GameManager:
             if self.initial_movement:
                 return self.reset_game()
             self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else "")
+            self.initial_movement = ""
             if self.player.points == self.mushroom_count:
                 print("\n\nYou Won!")
                 return False
@@ -117,48 +110,4 @@ class GameManager:
                 if not self.player.status:
                     print("\n\nGame Over!")
                     return False
-
-
-
             
-
-            for move in move_input:
-                if move == '!':
-                    self.initial_movement = move_input.split('!', 1)[1]
-                    return self.reset_game()
-                if move == 'P':
-                    self.player.pickup_item()
-                if move == 'Q':
-                    quit()
-                self.player.movement(self.map_level, move, self.input_handler.moves, self.row_len, self.col_len)
-
-                if self.player.points == self.mushroom_count:
-                    if '!' not in move_input:
-                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l,  self.player.item.symbol if self.player.item else "")
-                        print("\n\nYou Won!")
-                        return False
-                    else:
-                        self.initial_movement = move_input.split('!', 1)[1]
-                        return self.reset_game()
-
-                # checks if win condition is satisfied
-                if not self.player.status:
-                    # checks if restart (!) is present
-                    if '!' not in move_input:
-                        self.renderer.display_map(self.map_level, self.player.points, self.player.under_l, self.player.item.symbol if self.player.item else "")
-                        print("\n\nGame Over!")
-                        return False
-                    else:
-                        self.initial_movement = move_input.split('!', 1)[1]
-                        return self.reset_game()
-
-            # checks if it has an output file
-            if output_file:
-                cleared_status = (self.player.points == self.mushroom_count)
-                with open(output_file, "w", encoding="utf-8") as file:
-                    file.write("CLEAR\n" if cleared_status else "NO CLEAR\n")
-                    for row in self.map_level:
-                        file.write("".join(row) + "\n")
-                return False
-
-            self.initial_movement = ""
